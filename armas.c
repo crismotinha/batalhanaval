@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "armas.h"
+#include "game.h"
 char str_eixo[17] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O'}; //Para printar o enum. O zero é só pra começar com A = 1
 char* str_tipo_arma[6] = {"0","submarino", "cruzador", "hidroaviao", "encouracado", "porta avioes"}; //Para printar o enum. O zero é só pra começar com A = 1
 
@@ -176,11 +177,11 @@ arma_t criar_arma (int tipo_escolhido){
 int contida_tab(int tab[15][15], arma_t arma, po_t p_origem){
     int i;
     for (i=0; i<5; i++){
-        if(!( (arma.pontos[i].x + p_origem.x)< 15) && !( (arma.pontos[i].y + p_origem.y) < 15)){
-            return 0;
+        if((arma.pontos[i].x + p_origem.x < 15) && (arma.pontos[i].y + p_origem.y) < 15){
+            return 1;
         }
     }
-    return 1;
+    return 0;
 }
 int toca_outra_fig(int tab[15][15], arma_t arma, po_t p_origem){
     int i;
@@ -291,7 +292,8 @@ int colocar_peca (int tab[15][15], arma_t arma, po_t p_origem) {
         printf("\nPosicao invalida\n");
         return 0;
     }
-    printar_tabuleiro(tab);
+    exibir_tab_bonito(tab);
+    //printar_tabuleiro(tab);
     return 1;
 }
 

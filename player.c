@@ -119,10 +119,12 @@ void criar_tab_pc(int tab[15][15], arma_t armas[13]) {
             po_escolhido.y = (rand()%14);
             po_escolhido.x = (rand()%14); //contar de 0-14 pq o indice da matriz comeca com 0
             int colocar;
-            colocar = colocar_peca_sem_print(tab, arma_buscada, po_escolhido);
+            colocar = colocar_peca(tab, arma_buscada, po_escolhido);
             if (colocar == 1) {
                 armas[indice_arma].usada = true;
-                printf("\n");
+                printf("\n coloquei o tipo %d, na direcao %d, na posicao %d %d\n", peca_esc, orientacao, po_escolhido.y, po_escolhido.x);
+
+
                 printar_armas_disponiveis_player(armas);
 
             }
