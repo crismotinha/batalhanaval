@@ -176,12 +176,22 @@ arma_t criar_arma (int tipo_escolhido){
 
 int contida_tab(int tab[15][15], arma_t arma, po_t p_origem){
     int i;
+    int contida;
+    contida = 0;
     for (i=0; i<5; i++){
-        if((arma.pontos[i].x + p_origem.x < 15) && (arma.pontos[i].y + p_origem.y) < 15){
-            return 1;
+        int pontoX = arma.pontos[i].x + p_origem.x;
+        int pontoY = arma.pontos[i].y + p_origem.y;
+        if(pontoX < 15 && pontoX >=0 && pontoY < 15 && pontoY >=0){
+            contida +=1;
         }
     }
-    return 0;
+    if (contida == 5) { //OU SEJA, todos os pontos estão dentro
+        return 1;
+    }
+    else {
+        return 0;
+    }
+
 }
 int toca_outra_fig(int tab[15][15], arma_t arma, po_t p_origem){
     int i;
@@ -206,7 +216,7 @@ int toca_outra_fig(int tab[15][15], arma_t arma, po_t p_origem){
                 vizinhos += tab[pontoY+1][pontoX];
             }
             // vizinho acima
-            if (pontoY-1 <= 0){
+            if (pontoY-1 >= 0){
                 vizinhos +=tab[pontoY-1][pontoX];
             }
             // vizinho abaixo - esquerda

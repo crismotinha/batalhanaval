@@ -6,7 +6,7 @@ typedef struct player { char nome[10];
                         int tab[15][15]; } player_t;
 extern player_t player1;
 extern player_t player2;
-extern player_t player2_pc;
+extern po_t possiveis_alvos[225];
 
 player_t criar_armas_player(player_t player);
 void printar_armas_disponiveis_player(arma_t armas[13]);
