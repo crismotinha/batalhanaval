@@ -160,14 +160,16 @@ void jogar_com_player(int tab_p1[15][15],int tab_p2[15][15]) {
     }
 }
 
-void jogar_com_pc(int tab_p1[15][15],int tab_p2[15][15], po_t possiveis_alvos[225]) {
+void jogar_com_pc(int tab_p1[15][15],int tab_p2[15][15], po_t possiveis_alvos[225], po_t impossiveis[225],po_t prioritarios[225]) {
     int vez_P1;
     int vez_P2;
     int acertou;
     vez_P1 = 0;
     vez_P2 = 0;
     po_t ponto;
-    criar_array_possiveis_alvos(possiveis_alvos);
+    criar_array(possiveis_alvos);
+    criar_array(prioritarios);
+    criar_array(impossiveis);
     while (tudo_destruido(tab_p2) == 0 && tudo_destruido(tab_p1) == 0) {
         if (vez_P1 == 0 && vez_P2 == 0) { //primeira jogada, começa com P1
             printf("Player 1, é a sua vez de jogar. \n");
@@ -204,18 +206,43 @@ void jogar_com_pc(int tab_p1[15][15],int tab_p2[15][15], po_t possiveis_alvos[22
         }
         if (vez_P2 == 1) {
             printf("Player 2, é a sua vez de jogar. \n");
-            ponto = escolher_ponto_pc_esperto(tab_p1, possiveis_alvos);
+            ponto = escolher_ponto_pc_esperto(tab_p1, possiveis_alvos, impossiveis, prioritarios);
             acertou = atirar(tab_p1, ponto);
             if (acertou == 1) {
                 printf("\nVocê acertou e continua jogando!\n");
                 vez_P1 = 0;
                 vez_P2 = 1;
+
                 adicionar_possiveis_alvos(ponto, possiveis_alvos, tab_p1);
+                criar_prioritarios(tab_p1, possiveis_alvos, impossiveis, prioritarios);
+                limpar_array(possiveis_alvos, tab_p1);
+                limpar_array(prioritarios, tab_p1);
+
+
+                printf("\n PRIORITARIOS:\n");
+                printar_possiveis_alvos(prioritarios);
+
+                printf("\n pontos possiveis:\n");
+                printar_possiveis_alvos(possiveis_alvos);
+
+                printf("\n pontos impossiveis:\n");
+                printar_possiveis_alvos(impossiveis);
             }
             if (acertou == 0) {
                 printf("\nVocê errou... Passe o controle para o outro jogador!\n");
                 vez_P1 = 1;
                 vez_P2 = 0;
+                limpar_array(possiveis_alvos, tab_p1);
+                limpar_array(prioritarios, tab_p1);
+
+                 printf("\n PRIORITARIOS:\n");
+                printar_possiveis_alvos(prioritarios);
+
+                printf("\n pontos possiveis:\n");
+                printar_possiveis_alvos(possiveis_alvos);
+
+                printf("\n pontos impossiveis:\n");
+                printar_possiveis_alvos(impossiveis);
             }
 
         }
