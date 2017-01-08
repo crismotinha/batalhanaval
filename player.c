@@ -11,10 +11,10 @@ player_t criar_armas_player(player_t player){
         player.armas[i] = criar_arma(1); //submarinos
     }
     for (i=4; i<7; i++){
-        player.armas[i] = criar_arma(2); //submarinos
+        player.armas[i] = criar_arma(2); //cruzador
     }
     for (i=7; i<10; i++){
-        player.armas[i] = criar_arma(3); //submarinos
+        player.armas[i] = criar_arma(3); //hidroaviao
     }
     player.armas[10] = criar_arma(4);
     player.armas[11] = criar_arma(4);
@@ -50,10 +50,10 @@ void printar_armas_disponiveis_player(arma_t armas[13]) {
         }
      }
      if (num_submarino + num_cruzador + num_hidroaviao + num_encouracado + num_portaavioes == 0) {
-        printf("Você nao possui mais armas\n");
+        printf("\nVocê nao possui mais armas\n");
      }
      else {
-        printf("Voce tem:\n %d Submarinos\n %d Cruzadores\n %d Hidro-avioes\n %d Encouracados\n %d Porta-avioes",
+        printf("\nVoce tem:\n %d Submarinos\n %d Cruzadores\n %d Hidro-avioes\n %d Encouracados\n %d Porta-avioes",
      num_submarino, num_cruzador, num_hidroaviao, num_encouracado, num_portaavioes);
      }
 }
@@ -79,7 +79,7 @@ void criar_tab_player(int tab[15][15], arma_t armas[13]){
         printf("Escolha a posicao no tabuleiro (digite 'xy', sendo x: A-O e y: 1-15):\n");
         char posicao_x; //"x" (o lance da matriz invertida etc)
         int posicao_y;
-        scanf(" %[A-O] %d", &posicao_x, &posicao_y);
+        scanf(" %[A-O, a-o] %d", &posicao_x, &posicao_y);
         po_t po_escolhido;
         po_escolhido.y = (buscar_ponto(posicao_x));
         po_escolhido.x = posicao_y-1; //contar de 0-14 pq o indice da matriz comeca com 0
@@ -122,16 +122,16 @@ void criar_tab_pc(int tab[15][15], arma_t armas[13]) {
             colocar = colocar_peca(tab, arma_buscada, po_escolhido);
             if (colocar == 1) {
                 armas[indice_arma].usada = true;
-                printf("\n coloquei o tipo %d, na direcao %d, na posicao %d %d\n", peca_esc, orientacao, po_escolhido.y, po_escolhido.x);
+                //printf("\n coloquei o tipo %d, na direcao %d, na posicao %d %d\n", peca_esc, orientacao, po_escolhido.y, po_escolhido.x);
 
 
-                printar_armas_disponiveis_player(armas);
+                //printar_armas_disponiveis_player(armas);
 
             }
         }
     }
-    exibir_tab_bonito(tab);
-    printf("\n\n ==Todas as armas do PC foram colocadas!==\n\n");
+    //exibir_tab_bonito(tab);
+    //printf("\n\n ==Todas as armas do PC foram colocadas!==\n\n");
 }
 
 

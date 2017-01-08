@@ -14,7 +14,7 @@ po_t escolher_ponto_pc_esperto(int tab[15][15], po_t possiveis_alvos[], po_t imp
 
     ponto = buscar_ponto_valido(prioritarios, tab);
     if (ponto.x != -1 && ponto.y != -1) {
-        int ponto_impossivel = buscar_no_array(ponto, impossiveis);
+        int ponto_impossivel = buscar_no_array(ponto, impossiveis, 225);
             if (ponto_impossivel == -1) {
                 printf(" peguei de prioritarios ");
                 return ponto;
@@ -23,50 +23,17 @@ po_t escolher_ponto_pc_esperto(int tab[15][15], po_t possiveis_alvos[], po_t imp
 
     ponto = buscar_ponto_valido(possiveis_alvos, tab);
     if (ponto.x != -1 && ponto.y != -1) {
-        int ponto_impossivel = buscar_no_array(ponto, impossiveis);
+        int ponto_impossivel = buscar_no_array(ponto, impossiveis, 225);
             if (ponto_impossivel == -1) {
                 printf(" peguei de possiveis alvos ");
                 return ponto;
             }
     }
 
-    /*
-    for (i=0; i < 225; i++) {
-        ponto.x = prioritarios[i].x;
-        ponto.y = prioritarios[i].y;
-        if (ponto.x != -1 && ponto.y != -1) {
-            if (tab[ponto.y][ponto.x] != 2 && tab[ponto.y][ponto.x] != 3) {
-            ponto_final.x = ponto.x ;
-            ponto_final.y = ponto.y;
-            int ponto_impossivel = buscar_no_array(ponto_final, impossiveis);
-                if (ponto_impossivel == -1) {
-                    printf(" peguei de prioritarios ");
-                    return ponto_final;
-                }
-            }
-        }
-    }
-
-    for (i=0; i < 225; i++) {
-        ponto.x = possiveis_alvos[i].x;
-        ponto.y = possiveis_alvos[i].y;
-        if (ponto.x != -1 && ponto.y != -1) {
-            if (tab[ponto.y][ponto.x] != 2 && tab[ponto.y][ponto.x] != 3) {
-            ponto_final.x = ponto.x ;
-            ponto_final.y = ponto.y;
-            int ponto_impossivel = buscar_no_array(ponto_final, impossiveis);
-                if (ponto_impossivel == -1) {
-                    printf(" peguei de possiveis alvos ");
-                    return ponto_final;
-                }
-            }
-            }
-        }
-        */
     //se ele não achar nada de bom nos possiveis alvos, ele sorteia random
-    ponto.x = rand()%14;
-    ponto.y = rand()%14;
-    int ponto_impossivel = buscar_no_array(ponto, impossiveis);
+    ponto.x = rand()%15;
+    ponto.y = rand()%15;
+    int ponto_impossivel = buscar_no_array(ponto, impossiveis, 225);
     if (ponto_impossivel == -1) {
         if (tab[ponto.y][ponto.x] != 2 && tab[ponto.y][ponto.x] != 3) {
             ponto_final.x = ponto.x ;
@@ -104,9 +71,9 @@ void limpar_array(po_t array[], int tab[15][15]) {
         }
     }
 }
-int criar_array(po_t array[]){
+int criar_array(po_t array[], int tamanho){
     int i;
-    for (i=0; i < 225; i++) {
+    for (i=0; i < tamanho; i++) {
         array[i].x = -1;
         array[i].y = -1;
     }
@@ -124,8 +91,18 @@ void printar_possiveis_alvos(po_t array[]){
 }
 
 int buscar_espaco_array(po_t array[]){
-    int i;
+    int i,j;
     i = 0;
+    j = 0;
+    int sobrando;
+    sobrando = 0;
+    while (j<225){
+        if (array[j].x != -1 && array[j].y != -1){
+            sobrando+=1;
+        }
+        j++;
+    }
+    //printf("\nsobrando %d espaços\n", 225-sobrando);
     while (true){
         if (array[i].x == -1 && array[i].y == -1){
             return i;
@@ -134,9 +111,9 @@ int buscar_espaco_array(po_t array[]){
     }
 }
 
-int buscar_no_array(po_t ponto, po_t array[]){
+int buscar_no_array(po_t ponto, po_t array[], int tamanho){
     int i;
-    for (i=0; i < 225; i++) {
+    for (i=0; i < tamanho; i++) {
         if (array[i].x == ponto.x && array[i].y == ponto.y){
             return i;
         }
@@ -159,205 +136,316 @@ void adicionar_possiveis_alvos(po_t ponto, po_t possiveis_alvos[], int tab[15][1
     pontoL.y = ponto.y;
     pontoO.x = ponto.x - 1;
     pontoO.y = ponto.y;
-    printf("No ponto %c%d, adicionei os vizinhos:\n", str_eixo[ponto.y], ponto.x+1);
+    //printf("No ponto %c%d, adicionei os vizinhos:\n", str_eixo[ponto.y], ponto.x+1);
     if (tab[pontoN.y][pontoN.x] != 2 && tab[pontoN.y][pontoN.x] != 3) {
-        if (buscar_no_array(pontoN, possiveis_alvos)== -1){
+        if (buscar_no_array(pontoN, possiveis_alvos, 225)== -1){
             indice = buscar_espaco_array(possiveis_alvos);
             possiveis_alvos[indice] = pontoN;
         }
     }
     if (tab[pontoS.y][pontoS.x] != 2 && tab[pontoS.y][pontoS.x] != 3) {
-        if (buscar_no_array(pontoS, possiveis_alvos)== -1){
+        if (buscar_no_array(pontoS, possiveis_alvos, 225)== -1){
             indice = buscar_espaco_array(possiveis_alvos);
             possiveis_alvos[indice] = pontoS;
         }
     }
     if (tab[pontoL.y][pontoL.x] != 2 && tab[pontoL.y][pontoL.x] != 3) {
-        if (buscar_no_array(pontoL, possiveis_alvos)== -1){
+        if (buscar_no_array(pontoL, possiveis_alvos, 225)== -1){
             indice = buscar_espaco_array(possiveis_alvos);
             possiveis_alvos[indice] = pontoL;
         }
     }
     if (tab[pontoO.y][pontoO.x] != 2 && tab[pontoO.y][pontoO.x] != 3) {
-        if (buscar_no_array(pontoO, possiveis_alvos)== -1){
+        if (buscar_no_array(pontoO, possiveis_alvos, 225)== -1){
             indice = buscar_espaco_array(possiveis_alvos);
             possiveis_alvos[indice] = pontoO;
         }
     }
 }
 
-void add_no_array(po_t ponto, po_t array[]) {
-    if (buscar_no_array(ponto, array) == -1) {
+void add_no_array(po_t ponto, po_t array[], int tamanho) {
+    if (buscar_no_array(ponto, array, tamanho) == -1) {
         int indice;
         indice = buscar_espaco_array(array);
         array[indice] = ponto;
+        //printf("\nadicionei!\n");
     }
 }
-void excluir_do_array(po_t ponto, po_t array[]) {
+void excluir_do_array(po_t ponto, po_t array[], int tamanho) {
     int indice;
-    indice = buscar_no_array(ponto, array);
-    array[indice].x = -1;
-    array[indice].y = -1;
+    indice = buscar_no_array(ponto, array, tamanho);
+    if (indice != -1) {
+        array[indice].x = -1;
+        array[indice].y = -1;
+    }
 }
 
-po_t tem_vizinhoNSLO(po_t pontoPrincipal, int tab[15][15]){
+po_t menor_do_array(po_t array[], int tab[15][15],po_t ex_prioritarios[]){
+    int i;
+    po_t menor;
+    menor.x = -1;
+    menor.y = -1;
+    for (i=0;i<9;i++){
+        if (menor.x == -1 && menor.y == -1){
+            if(array[i].x == array[i+1].x) {
+                menor.x = array[i].x;
+                menor.y = array[i].y;
+            }
+            if(array[i].y == array[i+1].y) {
+                menor.x = array[i].x;
+                menor.y = array[i].y;
+            }
+        }
+    }
+    for (i=0;i<9;i++){
+
+            if(array[i].x == menor.x) {
+            int proximo;
+            proximo = array[i].y;
+            if (array[i].y < menor.y && array[i].y != -1){
+                    menor.x = array[i].x;
+                    menor.y = array[i].y;
+            }
+
+            }
+            if(array[i].y == menor.y) {
+                if (array[i].x < menor.x && array[i].x != -1) {
+                    menor.x = array[i].x;
+                    menor.y = array[i].y;
+                }
+
+            }
+
+    }
+    return menor;
+}
+po_t maior_do_array(po_t array[], int tab[15][15],po_t ex_prioritarios[]){
+    int i;
+    po_t maior;
+    maior.x = -1;
+    maior.y = -1;
+    for (i=0;i<9;i++){
+        if (maior.x == -1 && maior.y == -1){
+            if(array[i].x == array[i+1].x) {
+                maior.x = array[i].x;
+                maior.y = array[i].y;
+            }
+            if(array[i].y == array[i+1].y) {
+                maior.x = array[i].x;
+                maior.y = array[i].y;
+            }
+        }
+
+    }
+
+    for (i=0;i<9;i++){
+//            printf("\n array[%d] = %c%d", i, str_eixo[array[i].y], array[i].x +1);
+            if(array[i].x == maior.x) {
+                if (array[i].y > maior.y){
+                    maior.x = array[i].x;
+                    maior.y = array[i].y;
+                    }
+
+            }
+            if(array[i].y == maior.y) {
+                if (array[i].x > maior.x){
+                    maior.x = array[i].x;
+                    maior.y = array[i].y;
+                }
+
+            }
+        }
+
+    return maior;
+}
+
+void limpar_prioritarios(int tab[15][15], po_t prioritarios[],po_t ex_prioritarios[]){
+    printf("\n Entrei em limpar \n");
+    po_t maior;
+    po_t menor;
+    po_t ponto_exc1,ponto_exc2, ponto_1, ponto_2;
+    int diferenca_x, diferenca_y, i;
+    maior = maior_do_array(prioritarios, tab, ex_prioritarios);
+    menor = menor_do_array(prioritarios, tab, ex_prioritarios);
+    diferenca_x = maior.x - menor.x;
+    diferenca_y = maior.y - menor.y;
+    printf("o maior ponto foi: %c%d e o menor foi: %c%d. A diferenca do x foi %d e a do y foi %d",
+    str_eixo[maior.y], maior.x+1,str_eixo[menor.y], menor.x+1, diferenca_x, diferenca_y );
+    if (diferenca_x == 0 && (diferenca_y == 1 || diferenca_y == 2 || diferenca_y == 3 || diferenca_y == 4)){
+            ponto_1.x = maior.x;
+            ponto_1.y = maior.y +1;
+            ponto_2.x = menor.x;
+            ponto_2.y = menor.y -1;
+            if (tab[ponto_1.y][ponto_1.x] == 3 && tab[ponto_2.y][ponto_2.x] == 3){
+                add_no_array(maior, ex_prioritarios,225);
+                add_no_array(menor, ex_prioritarios,225);
+                excluir_do_array(maior, prioritarios,225);
+                excluir_do_array(menor, prioritarios,225);
+                for (i=0; i<=diferenca_y; i++){
+                    ponto_exc1.x = menor.x;
+                    ponto_exc1.y = menor.y+i;
+
+                    add_no_array(ponto_exc1, ex_prioritarios,225);
+                    excluir_do_array(ponto_exc1, prioritarios,225);
+                }
+            }
+        }
+    else if ((diferenca_x == 1 || diferenca_x == 2 || diferenca_x == 3 || diferenca_x == 4) && diferenca_y == 0){
+            ponto_1.x = maior.x+1;
+            ponto_1.y = maior.y;
+            ponto_2.x = menor.x-1;
+            ponto_2.y = menor.y;
+            if (tab[ponto_1.y][ponto_1.x] == 3 && tab[ponto_2.y][ponto_2.x] == 3){
+                add_no_array(maior, ex_prioritarios,225);
+                add_no_array(menor, ex_prioritarios,225);
+                excluir_do_array(maior, prioritarios,225);
+                excluir_do_array(menor, prioritarios,225);
+                for (i=0; i<=diferenca_x; i++){
+                    ponto_exc1.x = menor.x+i;
+                    ponto_exc1.y = menor.y;
+
+                    add_no_array(ponto_exc1, ex_prioritarios,225);
+                    excluir_do_array(ponto_exc1, prioritarios,225);
+
+
+                }
+            }
+    }
+}
+
+
+
+int tem_vizinhoNSLO(po_t pontoPrincipal, int tab[15][15], po_t vizinhos[]){
     int pontoX;
     int pontoY;
+    int tem_vizinho;
+    tem_vizinho = 0;
     pontoX = pontoPrincipal.x;
     pontoY = pontoPrincipal.y;
     po_t ponto_vizinho;
+    if(pontoX < 15 && pontoX >=0 && pontoY < 15 && pontoY >=0){
     if (tab[pontoY-1][pontoX] == 2) { //vizinho ao Norte
         ponto_vizinho.x = pontoX;
         ponto_vizinho.y = pontoY-1;
-        return ponto_vizinho;
+        tem_vizinho +=1;
+        add_no_array(ponto_vizinho, vizinhos, 32);
+
     }
     if (tab[pontoY+1][pontoX] == 2) { //vizinho ao Sul
         ponto_vizinho.x = pontoX;
         ponto_vizinho.y = pontoY+1;
-        return ponto_vizinho;
+        tem_vizinho +=1;
+        add_no_array(ponto_vizinho, vizinhos, 32);
     }
     if (tab[pontoY][pontoX-1] == 2) { //vizinho ao Leste
         ponto_vizinho.x = pontoX-1;
         ponto_vizinho.y = pontoY;
-        return ponto_vizinho;
+        tem_vizinho +=1;
+        add_no_array(ponto_vizinho, vizinhos, 32);
     }
     if (tab[pontoY][pontoX+1] == 2) { //vizinho ao Oeste
         ponto_vizinho.x = pontoX+1;
         ponto_vizinho.y = pontoY;
-        return ponto_vizinho;
+        tem_vizinho +=1;
+        add_no_array(ponto_vizinho, vizinhos, 32);
     }
-    ponto_vizinho.x = -1;
-    ponto_vizinho.y = -1;
-    return ponto_vizinho;
+    }
+//    ponto_vizinho.x = -1;
+//    ponto_vizinho.y = -1;
+//    add_no_array(ponto_vizinho, vizinhos, 32);
+    if (tem_vizinho == 0){
+        return -1;
+    }
 }
 
-void criar_prioritarios (int tab[15][15], po_t possiveis_alvos[], po_t impossiveis[], po_t prioritarios[]) {
-    int i,j;
+void criar_prioritarios (int tab[15][15], po_t possiveis_alvos[], po_t impossiveis[], po_t prioritarios[], po_t ex_prioritarios[]) {
+    int i,j,k;
+    k=0;
     po_t ponto_principal;
     po_t ponto_vizinho;
+    po_t vizinhos[32];
+    criar_array(vizinhos, 32);
     ponto_vizinho.x = -1;
     ponto_vizinho.y = -1;
 
 
     for (i=0; i<15; i++){
         for (j=0; j<15; j++){
-            if (tab[j][i] == 2 && ponto_vizinho.x == -1 && ponto_vizinho.y == -1){
+            if (tab[j][i] == 2 && ponto_vizinho.x == -1 && ponto_vizinho.y == -1 ){
                 ponto_principal.x = i;
                 ponto_principal.y = j;
-                ponto_vizinho = tem_vizinhoNSLO(ponto_principal, tab);
+                if(buscar_no_array(ponto_principal, ex_prioritarios, 225) == -1) {
+                    int vizinho;
+                    vizinho = tem_vizinhoNSLO(ponto_principal, tab, vizinhos);
+                    if (vizinho != -1) {
+                        add_no_array(ponto_principal, vizinhos, 32);
+                    }
+                }
             }
         }
     }
+    //limpar_prioritarios(tab, prioritarios, ex_prioritarios);
+    //printf("\nfim de add no vizinhos\n");
+    printar_possiveis_alvos(vizinhos);
+    ponto_principal = menor_do_array(vizinhos, ex_prioritarios, tab);
+    ponto_vizinho = maior_do_array(vizinhos,ex_prioritarios,tab);
+
+    printf("ponto principal: %c%d \nponto vizinho: %c%d", str_eixo[ponto_principal.y], ponto_principal.x+1, str_eixo[ponto_vizinho.y], ponto_vizinho.x+1 );
     if (ponto_vizinho.x !=1 && ponto_vizinho.y !=-1) {
         int diferenca_x;
         int diferenca_y;
         po_t ponto_add1, ponto_add2, ponto_exc1, ponto_exc2, ponto_exc3, ponto_exc4;
         diferenca_x = ponto_vizinho.x - ponto_principal.x;
         diferenca_y = ponto_vizinho.y - ponto_principal.y;
-        printf("ponto principal: %c%d \nponto vizinho: %c%d", str_eixo[ponto_principal.y], ponto_principal.x, str_eixo[ponto_vizinho.y], ponto_vizinho.x );
+
+        //add_no_array(ponto_principal, ex_prioritarios, 225);
+        //add_no_array(ponto_vizinho, ex_prioritarios, 225);
         printf("\ndiferencax = %d, diferenca y = %d\n", diferenca_x, diferenca_y);
-        if (diferenca_x == 0 && diferenca_y == 1) { // ponto 2 está abaixo do ponto 1
-            ponto_add1.x = ponto_principal.x;
-            ponto_add1.y = ponto_principal.y +2;
+        if (diferenca_x == 0 && (diferenca_y == 1 || diferenca_y == 2 || diferenca_y == 3 || diferenca_y == 4)) { // ponto 2 está abaixo do ponto 1
+            ponto_add1.x = ponto_vizinho.x;
+            ponto_add1.y = ponto_vizinho.y +1;
             ponto_add2.x = ponto_principal.x;
             ponto_add2.y = ponto_principal.y -1;
-            add_no_array(ponto_add1, prioritarios);
-            add_no_array(ponto_add2, prioritarios);
+            add_no_array(ponto_add1, prioritarios, 225);
+            add_no_array(ponto_add2, prioritarios, 225);
 
-            ponto_exc1.x = ponto_principal.x +1;
-            ponto_exc1.y = ponto_principal.y;
-            ponto_exc2.x = ponto_principal.x -1;
-            ponto_exc2.y = ponto_principal.y;
-            ponto_exc3.x = ponto_vizinho.x +1;
-            ponto_exc3.y = ponto_vizinho.y;
-            ponto_exc4.x = ponto_vizinho.x -1;
-            ponto_exc4.y = ponto_vizinho.y;
-            excluir_do_array(ponto_exc1, possiveis_alvos);
-            add_no_array(ponto_exc1, impossiveis);
-            excluir_do_array(ponto_exc2, possiveis_alvos);
-            add_no_array(ponto_exc2, impossiveis);
-            excluir_do_array(ponto_exc3, possiveis_alvos);
-            add_no_array(ponto_exc3, impossiveis);
-            excluir_do_array(ponto_exc4, possiveis_alvos);
-            add_no_array(ponto_exc4, impossiveis);
+
+            for (i=0; i<=diferenca_y; i++){
+                ponto_exc1.x = ponto_principal.x +1;
+                ponto_exc1.y = ponto_principal.y+i;
+                ponto_exc2.x = ponto_principal.x -1;
+                ponto_exc2.y = ponto_principal.y+i;
+                excluir_do_array(ponto_exc1, possiveis_alvos, 225);
+                add_no_array(ponto_exc1, impossiveis, 225);
+                excluir_do_array(ponto_exc2, possiveis_alvos, 225);
+                add_no_array(ponto_exc2, impossiveis, 225);
+            }
+
+
 
         }
-        else if (diferenca_x == 0 && diferenca_y == -1) { // ponto 2 está acima do ponto 1
-            ponto_add1.x = ponto_principal.x;
-            ponto_add1.y = ponto_principal.y -2;
-            ponto_add2.x = ponto_principal.x;
-            ponto_add2.y = ponto_principal.y +1;
-            add_no_array(ponto_add1, prioritarios);
-            add_no_array(ponto_add2, prioritarios);
-
-            ponto_exc1.x = ponto_principal.x +1;
-            ponto_exc1.y = ponto_principal.y;
-            ponto_exc2.x = ponto_principal.x -1;
-            ponto_exc2.y = ponto_principal.y;
-            ponto_exc3.x = ponto_vizinho.x +1;
-            ponto_exc3.y = ponto_vizinho.y;
-            ponto_exc4.x = ponto_vizinho.x -1;
-            ponto_exc4.y = ponto_vizinho.y;
-            excluir_do_array(ponto_exc1, possiveis_alvos);
-            add_no_array(ponto_exc1, impossiveis);
-            excluir_do_array(ponto_exc2, possiveis_alvos);
-            add_no_array(ponto_exc2, impossiveis);
-            excluir_do_array(ponto_exc3, possiveis_alvos);
-            add_no_array(ponto_exc3, impossiveis);
-            excluir_do_array(ponto_exc4, possiveis_alvos);
-            add_no_array(ponto_exc4, impossiveis);
-
-        }
-        else if (diferenca_x == 1 && diferenca_y == 0) { // ponto 2 está a direita do ponto 1
-            ponto_add1.x = ponto_principal.x+2;
-            ponto_add1.y = ponto_principal.y;
+        else if ((diferenca_x == 1 || diferenca_x == 2 || diferenca_x == 3 || diferenca_x == 4) && diferenca_y == 0) { // ponto 2 está a direita do ponto 1
+            ponto_add1.x = ponto_vizinho.x+1;
+            ponto_add1.y = ponto_vizinho.y;
             ponto_add2.x = ponto_principal.x-1;
             ponto_add2.y = ponto_principal.y;
-            add_no_array(ponto_add1, prioritarios);
-            add_no_array(ponto_add2, prioritarios);
+            add_no_array(ponto_add1, prioritarios, 225);
+            add_no_array(ponto_add2, prioritarios, 225);
+             printf("\nfim de add no prioritarios\n");
 
-            ponto_exc1.x = ponto_principal.x;
-            ponto_exc1.y = ponto_principal.y+1;
-            ponto_exc2.x = ponto_principal.x;
-            ponto_exc2.y = ponto_principal.y-1;
-            ponto_exc3.x = ponto_vizinho.x;
-            ponto_exc3.y = ponto_vizinho.y+1;
-            ponto_exc4.x = ponto_vizinho.x;
-            ponto_exc4.y = ponto_vizinho.y-1;
-            excluir_do_array(ponto_exc1, possiveis_alvos);
-            add_no_array(ponto_exc1, impossiveis);
-            excluir_do_array(ponto_exc2, possiveis_alvos);
-            add_no_array(ponto_exc2, impossiveis);
-            excluir_do_array(ponto_exc3, possiveis_alvos);
-            add_no_array(ponto_exc3, impossiveis);
-            excluir_do_array(ponto_exc4, possiveis_alvos);
-            add_no_array(ponto_exc4, impossiveis);
 
-        }
-        else if (diferenca_x == -1 && diferenca_y == 0) { // ponto 2 está a esquerda do ponto 1
-            ponto_add1.x = ponto_principal.x-2;
-            ponto_add1.y = ponto_principal.y;
-            ponto_add2.x = ponto_principal.x+1;
-            ponto_add2.y = ponto_principal.y;
-            add_no_array(ponto_add1, prioritarios);
-            add_no_array(ponto_add2, prioritarios);
+            for (i=0; i<=diferenca_x; i++){
+                ponto_exc1.x = ponto_principal.x+i;
+                ponto_exc1.y = ponto_principal.y+1;
+                ponto_exc2.x = ponto_principal.x+i;
+                ponto_exc2.y = ponto_principal.y-1;
+                excluir_do_array(ponto_exc1, possiveis_alvos, 225);
+                add_no_array(ponto_exc1, impossiveis, 225);
+                excluir_do_array(ponto_exc2, possiveis_alvos, 225);
+                add_no_array(ponto_exc2, impossiveis, 225);
+            }
 
-            ponto_exc1.x = ponto_principal.x;
-            ponto_exc1.y = ponto_principal.y+1;
-            ponto_exc2.x = ponto_principal.x;
-            ponto_exc2.y = ponto_principal.y-1;
-            ponto_exc3.x = ponto_vizinho.x;
-            ponto_exc3.y = ponto_vizinho.y+1;
-            ponto_exc4.x = ponto_vizinho.x;
-            ponto_exc4.y = ponto_vizinho.y-1;
-            excluir_do_array(ponto_exc1, possiveis_alvos);
-            add_no_array(ponto_exc1, impossiveis);
-            excluir_do_array(ponto_exc2, possiveis_alvos);
-            add_no_array(ponto_exc2, impossiveis);
-            excluir_do_array(ponto_exc3, possiveis_alvos);
-            add_no_array(ponto_exc3, impossiveis);
-            excluir_do_array(ponto_exc4, possiveis_alvos);
-            add_no_array(ponto_exc4, impossiveis);
+
 
         }
     }

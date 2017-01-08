@@ -299,10 +299,10 @@ int colocar_peca (int tab[15][15], arma_t arma, po_t p_origem) {
         }
     }
     else {
-        printf("\nPosicao invalida\n");
+        //printf("\nPosicao invalida\n");
         return 0;
     }
-    exibir_tab_bonito(tab);
+//    exibir_tab_bonito(tab);
     //printar_tabuleiro(tab);
     return 1;
 }
