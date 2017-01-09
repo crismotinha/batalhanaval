@@ -62,7 +62,7 @@ void criar_tab_player(int tab[15][15], arma_t armas[13]){
     criar_tabuleiro(tab);
     int i;
     while(armas_usadas(armas) != 13){
-        printf("Escolha uma peça para colocar no tabuleiro (submarino = 1, cruzador = 2, hidroaviao = 3, encouracado = 4, portaavioes = 5):\n");
+        printf("\nEscolha uma peça para colocar no tabuleiro (submarino = 1, cruzador = 2, hidroaviao = 3, encouracado = 4, portaavioes = 5):\n");
         int peca_esc;
         scanf("%d", &peca_esc);
         int indice_arma;
@@ -87,6 +87,7 @@ void criar_tab_player(int tab[15][15], arma_t armas[13]){
         colocar = colocar_peca(tab, arma_buscada, po_escolhido);
             if (colocar == 1) {
                 armas[indice_arma].usada = true;
+                exibir_tab_bonito(tab);
                 printar_armas_disponiveis_player(armas);
             }
         }

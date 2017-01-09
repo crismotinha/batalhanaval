@@ -29,7 +29,10 @@ int toca_outra_fig(int tab[15][15], arma_t arma, po_t p_origem);
 int intersecta_outra_fig (int tab[15][15], arma_t arma, po_t p_origem);
 
 int posicao_valida(int tab[15][15], arma_t arma, po_t p_origem);
+int buscar_por_tipo(arma_t armas[13], int tipo);
+int armas_usadas(arma_t armas[13]);
 
 int colocar_peca (int tab[15][15], arma_t arma, po_t p_origem);
+int colocar_peca_sem_print (int tab[15][15], arma_t arma, po_t p_origem);
 
 #endif

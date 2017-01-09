@@ -55,7 +55,7 @@ po_t escolher_ponto_player() {
     char pontoY;
     int pontoX;
     printf("Digite o ponto que você quer atirar:\n");
-    scanf("%c%d", &pontoY, &pontoX);
+    scanf("%c %d", &pontoY, &pontoX);
     ponto.x = pontoX - 1;
     ponto.y =  (buscar_ponto(pontoY));
     getchar();
@@ -65,8 +65,8 @@ po_t escolher_ponto_player() {
 po_t escolher_ponto_pc_burro(int tab[15][15]) {
     po_t ponto;
     while (true) {
-        ponto.x = rand()%14;
-        ponto.y = rand()%14;
+        ponto.x = rand()%15;
+        ponto.y = rand()%15;
         if (tab[ponto.y][ponto.x] != 2 && tab[ponto.y][ponto.x] != 3) {
             return ponto;
         }
@@ -117,13 +117,16 @@ void jogar_com_player(int tab_p1[15][15],int tab_p2[15][15]) {
     int vez_P1;
     int vez_P2;
     int acertou;
+    //int contagem_acertos;
     vez_P1 = 0;
     vez_P2 = 0;
     po_t ponto;
+    //contagem_acertos = 0;
+    //while (contagem_acertos <2) {
     while (tudo_destruido(tab_p2) == 0 && tudo_destruido(tab_p1) == 0) {
         if (vez_P1 == 0 && vez_P2 == 0) { //primeira jogada, começa com P1
-            printf("Player 1, é a sua vez de jogar. \n");
             getchar();
+            printf("Player 1, é a sua vez de jogar. \n");
             ponto = escolher_ponto_player();
             acertou = atirar(tab_p2, ponto);
             if (acertou == 1) {
@@ -138,14 +141,15 @@ void jogar_com_player(int tab_p1[15][15],int tab_p2[15][15]) {
             }
         }
         if (vez_P1 == 1) {
-            printf("Player 1, é a sua vez de jogar. \n");
             getchar();
+            printf("Player 1, é a sua vez de jogar. \n");
             ponto = escolher_ponto_player();
             acertou = atirar(tab_p2, ponto);
             if (acertou == 1) {
                 printf("\nVocê acertou e continua jogando!\n");
                 vez_P1 = 1;
                 vez_P2 = 0;
+           //     contagem_acertos +=1;
             }
             if (acertou == 0) {
                 printf("\nVocê errou... Passe o controle para o outro jogador!\n");
@@ -153,8 +157,10 @@ void jogar_com_player(int tab_p1[15][15],int tab_p2[15][15]) {
                 vez_P2 = 1;
             }
 
+
         }
         if (vez_P2 == 1) {
+            getchar();
             printf("Player 2, é a sua vez de jogar. \n");
             ponto = escolher_ponto_player();
             acertou = atirar(tab_p1, ponto);
@@ -186,14 +192,15 @@ void jogar_com_pc(int tab_p1[15][15],int tab_p2[15][15], po_t possiveis_alvos[22
     criar_array(ex_prioritarios, 225);
     int contagem_acertos;
     contagem_acertos = 0;
-    while (contagem_acertos <12) {
-    //while (tudo_destruido(tab_p2) == 0 && tudo_destruido(tab_p1) == 0) {
+    //while (contagem_acertos <12) { //Descomentar essa linha para limitar o numero de acertos antes de acabar o programa
+
+    while (tudo_destruido(tab_p2) == 0 && tudo_destruido(tab_p1) == 0) {
         if (vez_P1 == 0 && vez_P2 == 0) { //primeira jogada, começa com P1
             printf("Jogador 1, é a sua vez de jogar. \n");
             //getchar();
-            //ponto = escolher_ponto_player();
-            ponto.x=0;
-            ponto.y=0;
+            ponto = escolher_ponto_player(); //comentar essa linha e descomentar as abaixo caso queira um P1 que chute num ponto fixo sempre
+            //ponto.x=0;                        //para testar a IA por exemplo
+            //ponto.y=0;
             acertou = atirar_sem_print(tab_p2, ponto);
             if (acertou == 1) {
                 printf("\nVocê acertou e continua jogando!\n");
@@ -209,9 +216,9 @@ void jogar_com_pc(int tab_p1[15][15],int tab_p2[15][15], po_t possiveis_alvos[22
         if (vez_P1 == 1) {
             printf("Jogador 1, é a sua vez de jogar. \n");
 
-            //ponto = escolher_ponto_player();
-            ponto.x=0;
-            ponto.y=0;
+            ponto = escolher_ponto_player();
+            //ponto.x=0;
+            //ponto.y=0;
             acertou = atirar_sem_print(tab_p2, ponto);
             if (acertou == 1) {
                 printf("\nVocê acertou e continua jogando!\n");
@@ -228,6 +235,7 @@ void jogar_com_pc(int tab_p1[15][15],int tab_p2[15][15], po_t possiveis_alvos[22
         if (vez_P2 == 1) {
             printf("Jogador 2, é a sua vez de jogar. \n");
             ponto = escolher_ponto_pc_esperto(tab_p1, possiveis_alvos, impossiveis, prioritarios);
+            //ponto = escolher_ponto_pc_burro(tab_p1); //Descomente essa linha para jogar com o PC "burro"
             acertou = atirar(tab_p1, ponto);
             if (acertou == 1) {
                 printf("\nVocê acertou e continua jogando!\n");
@@ -238,20 +246,22 @@ void jogar_com_pc(int tab_p1[15][15],int tab_p2[15][15], po_t possiveis_alvos[22
                 printf("\n\n\n");
                 criar_prioritarios(tab_p1, possiveis_alvos, impossiveis, prioritarios, ex_prioritarios);
                 limpar_array(possiveis_alvos, tab_p1);
-                //limpar_array(prioritarios, tab_p1);
+                limpar_array(prioritarios, tab_p1);
+
+                //Descomente as linhas abaixo caso queira ver os conjuntos sendo criados
 //                printf("\n PRIORITARIOS:\n");
-//                printar_possiveis_alvos(prioritarios);
+//                printar_possiveis_alvos(prioritarios,225);
 //
 //                printf("\n PONTOS POSSIVEIS:\n");
-//                printar_possiveis_alvos(possiveis_alvos);
+//                printar_possiveis_alvos(possiveis_alvos,225);
 //
 //                printf("\n PONTOS IMPOSSIVEIS:\n");
-//                printar_possiveis_alvos(impossiveis);
+//                printar_possiveis_alvos(impossiveis,225);
 //
-//                printf("\n Ex-prioritarios:\n");
-//                printar_possiveis_alvos(ex_prioritarios);
-
-                contagem_acertos+=1;
+//                printf("\n Ex-vizinhos:\n");
+//                printar_possiveis_alvos(ex_prioritarios,225);
+//
+//                contagem_acertos+=1;
             }
             if (acertou == 0) {
                 printf("\nVocê errou... Passe o controle para o outro jogador!\n");
@@ -259,20 +269,27 @@ void jogar_com_pc(int tab_p1[15][15],int tab_p2[15][15], po_t possiveis_alvos[22
                 vez_P2 = 0;
                 limpar_array(possiveis_alvos, tab_p1);
                 limpar_array(prioritarios, tab_p1);
-
-                printf("\n PRIORITARIOS:\n");
-                printar_possiveis_alvos(prioritarios);
-
-                printf("\n PONTOS POSSIVEIS:\n");
-                printar_possiveis_alvos(possiveis_alvos);
-
-                printf("\n PONTOS IMPOSSIVEIS:\n");
-                printar_possiveis_alvos(impossiveis);
-                printf("\n Ex-prioritarios:\n");
-                printar_possiveis_alvos(ex_prioritarios);
+//
+//                printf("\n PRIORITARIOS:\n");
+//                printar_possiveis_alvos(prioritarios, 225);
+//
+//                printf("\n PONTOS POSSIVEIS:\n");
+//                printar_possiveis_alvos(possiveis_alvos, 225);
+//
+//                printf("\n PONTOS IMPOSSIVEIS:\n");
+//                printar_possiveis_alvos(impossiveis, 225);
+//
+//                printf("\n Ex-vizinhos:\n");
+//                printar_possiveis_alvos(ex_prioritarios, 225);
             }
 
         }
+    }
+    if(tudo_destruido(tab_p2) != 0){
+        printf("\nJogador 1 ganhou!\n");
+    }
+    if(tudo_destruido(tab_p1) != 0){
+        printf("\nJogador 2 ganhou!\n");
     }
 }
 
